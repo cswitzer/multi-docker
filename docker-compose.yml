@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=postgres_password
+  redis:
+    image: redis:latest
+  server:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
+    volumes:
+      - "/app/node_modules" # just leave folder as is in the container
+      - "./server:/app" # map the local folder to the container
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PGUSER=postgres
+      # name of service "postgres" is the hostname
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=postgres_password
+      - PGPORT=5432
+  worker:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./worker
+    
