@@ -50,6 +50,7 @@ app.get('/values/all', async (req, res) => {
   res.send(values.rows);
 });
 
+// /api/values/current in the client. The /api part is for nginx to route the request to the correct service.
 app.get('/values/current', async (req, res) => {
   redisClient.hgetall('values', (err, values) => {
     res.send(values);
